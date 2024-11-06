@@ -7,7 +7,7 @@ function App() {
 const [formValues, setFormValues] = useState({ 
   firstname: '', 
   lastname: '', 
-  AddressEamil: '',
+  AddressEmail: '',
   typeG : '',
   messageText : '',
   checkbox : false,
@@ -28,23 +28,56 @@ const [formValues, setFormValues] = useState({
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    // console.log(name)
     const fieldValue = type === 'checkbox' ? checked : value;
 
     setFormValues({ ...formValues, [name]: fieldValue });
 
-    // Check if the regex pattern exists for the field
+
     if (regexPatterns[name]) {
+      switch(name){
+        case "firstname" : 
         setFormErrors({
-            ...formErrors,
-            [name]: regexPatterns[name].test(fieldValue.toString()) ? '' : `Invalid ${name}`
-        });
+          ...formErrors,
+          [name]: regexPatterns[`${name}`].test(fieldValue.toString()) ? '' : `This field is required`
+      }); break;
+        case "lastname" : 
+        setFormErrors({
+          ...formErrors,
+          [name]: regexPatterns[`${name}`].test(fieldValue.toString()) ? '' : `This field is required`
+      }); break; 
+        case "AddressEmail" : 
+        setFormErrors({
+          ...formErrors,
+          [name]: regexPatterns[`${name}`].test(fieldValue.toString()) ? '' : `Please enter a valid email address`
+      }); break; 
+        case "typeG" : 
+        setFormErrors({
+          ...formErrors,
+          [name]: regexPatterns[`${name}`].test(fieldValue.toString()) ? '' : `Please select a query type`
+      }); break; 
+        case "messageText" : 
+        setFormErrors({
+          ...formErrors,
+          [name]: regexPatterns[`${name}`].test(fieldValue.toString()) ? '' : `This field is required`
+      }); break; 
+        case "checkbox" : 
+        setFormErrors({
+          ...formErrors,
+          [name]: regexPatterns[`${name}`].test(fieldValue.toString()) ? '' : `  To submit this form, please consent to being contacted`
+      }); break; 
+      default : break ;
+      }
+
+ 
     } else {
-        // If no regex pattern, reset the error for this field
+
         setFormErrors({
             ...formErrors,
             [name]: ''
         });
     }
+    handleSubmit();
 };
 
   
@@ -53,6 +86,7 @@ const [formValues, setFormValues] = useState({
     const errors = Object.keys(formValues).reduce((acc, field) => {
       if (!regexPatterns[field].test(formValues[field].toString())) {
         acc[field] = `Invalid ${field}`;
+       console.log(field)
       }
       return acc;
     }, {});
@@ -95,8 +129,8 @@ const [formValues, setFormValues] = useState({
         <div className="Address_eamal">
             <div>
             <label className='libleAdress'  htmlFor=""> Email Address *</label><br />
-            <input  type="text" name='AddressEamil' value={formValues.AddressEamil} onChange={handleChange}/>
-            {formErrors.AddressEamil && <p className='p1'>{formErrors.AddressEamil}</p>}
+            <input  type="email" name='AddressEmail' value={formValues.AddressEmail} onChange={handleChange}/>
+            {formErrors.AddressEmail && <p className='p1'>{formErrors.AddressEmail}</p>}
             
             </div>
         </div>
@@ -135,7 +169,8 @@ const [formValues, setFormValues] = useState({
             <div>
             <input  type="checkbox" name='checkbox' value={formValues.checkbox} onChange={handleChange}/>
             <label>  I consent to being contacted by the team</label>
-            {formErrors.checkbox && <p className='p1'>{formErrors.checkbox}</p>}
+            { <p className='p1'>{formErrors.checkbox}</p>}    
+            {/* formErrors.checkbox && */}
             </div>
         </div>
                   {/* INPUT SUBMIT */}
